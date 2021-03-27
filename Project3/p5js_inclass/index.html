@@ -27,32 +27,128 @@
         let baseURL = "https://api.particle.io/v1/devices/430029001847393035313137/";
         let token = "?access_token=078a639410f7a8655f30a545d59fdb42676a245b";
     
-        let param1 ="pot1";
+        let param1 = "pot1";
         let param2 = "pot2";
+        let param3 = "pot3";
         let data1URL = baseURL + param1 + token; //for potentiometer 1
         let data2URL = baseURL + param2 + token; //for potentiometer 2
+        let data3URL = baseURL + param3 + token; //for potentiometer 3
+
+        let Futura;
+        let angle = 0;
 
         //TIMER vars
         let currentFactor, prevFactor;
-        let timeInterval = 500;
+        let timeInterval = 300;
         let whichParam = 1;
-        let numberOfParams = 2; //number of sensors you have
+        let numberOfParams = 3; //number of sensors you have
 
         //COLOR vars:
         let myHue = 0;
         let mySat = 100;
 
+        //function preload() {
+            //Futura = loadFont('Khand-Bold.ttf');
+        //}
+
         function setup(){
-            createCanvas(800,800);
+            createCanvas(800,800,WEBGL);
         
             currentFactor= 0;
             prevFactor = 0;
 
             colorMode(HSB,360,100,100,1);
+
+            let x1 =0;
+            let x2 =160;
+            let x3 = 320;
+            let x4 = 480;
+            let x5 = 640;
+            let x6 = 800;
+
+
+
+            g = createGraphics(950,500);
+            g.fill(230);
+            //g.background(5,85,245);
+            //g.textAlign(CENTER);
+            //g.textFont(Futura);
+            g.textSize(50);
+            g.text('FOOD',x1,100);
+            g.text('FOOD',x2,100);
+            g.text('FOOD',x4,100);
+            g.text('FOOD',x3,100);
+            g.text('FOOD',x5,100);
+            g.text('FOOD',x6,100);
+
+            let a = 155;
+            g.text('FOOD',x1,a);
+            g.text('FOOD',x2,a);
+            g.text('FOOD',x3,a);
+            g.text('FOOD',x4,a);
+            g.text('FOOD',x5,a);
+            g.text('FOOD',x6,a);
+
+
+
+            let b = 205;
+            g.text('FOOD',x1,b);
+            g.text('FOOD',x2,b);
+            g.text('FOOD',x3,b);
+            g.text('FOOD',x4,b);
+            g.text('FOOD',x5,b);
+            g.text('FOOD',x6,b);
+
+
+
+            let c = 255;
+            g.text('FOOD',x1,c);
+            g.text('FOOD',x2,c);
+            g.text('FOOD',x3,c);
+            g.text('FOOD',x4,c);
+            g.text('FOOD',x5,c);
+            g.text('FOOD',x6,c);
+
+
+            let d = 305;
+            g.text('FOOD',x1,d);
+            g.text('FOOD',x2,d);
+            g.text('FOOD',x3,d);
+            g.text('FOOD',x4,d);
+            g.text('FOOD',x5,d);
+            g.text('FOOD',x6,d);
+
+            let e = 355;
+            g.text('FOOD',x1,e);
+            g.text('FOOD',x2,e);
+            g.text('FOOD',x3,e);
+            g.text('FOOD',x4,e);
+            g.text('FOOD',x5,e);
+            g.text('FOOD',x6,e);
+
+            let f = 405;
+            g.text('FOOD',x1,f);
+            g.text('FOOD',x2,f);
+            g.text('FOOD',x3,f);
+            g.text('FOOD',x4,f);
+            g.text('FOOD',x5,f);
+            g.text('FOOD',x6,f);
+
+
+            let h = 455;
+            g.text('FOOD',x1,h);
+            g.text('FOOD',x2,h);
+            g.text('FOOD',x3,h);
+            g.text('FOOD',x4,h);
+            g.text('FOOD',x5,h);
+            g.text('FOOD',x6,h);
+
+
         }
 
         function draw(){
             background(myHue, mySat,100);
+            
 
             currentFactor = millis()% timeInterval;
             if(currentFactor<prevFactor){ //passed an interval
@@ -64,10 +160,23 @@
                 }
                 whichParam++;
                 if(whichParam == (numberOfParams+1)) whichParam = 1;
-
-
             }
             prevFactor = currentFactor; //prep for the next frame
+            
+            
+            rotateY(angle);
+              //rotateY(-0.7);
+            //  g.position(100,0,0);
+            
+            //rotateZ(-1.55);
+            rotateY(0);
+            //  rotateX(angle);
+
+            texture(g);
+              //fill(100,20);
+            noStroke();
+            cylinder(180,400,500,100);
+            angle -= 0.02;
             
         }
 
