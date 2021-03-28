@@ -29,10 +29,12 @@
     
         let param1 = "pot1";
         let param2 = "pot2";
-        let param3 = "pot3";
+        let param3 = "motion";
+        let param4 = "button";
         let data1URL = baseURL + param1 + token; //for potentiometer 1
         let data2URL = baseURL + param2 + token; //for potentiometer 2
-        let data3URL = baseURL + param3 + token; //for potentiometer 3
+        let data3URL = baseURL + param3 + token; //for motion sensor
+        let data4URL = baseURL + param4 + token; //for button sensor
 
         let Futura;
         let angle = 0;
@@ -41,7 +43,7 @@
         let currentFactor, prevFactor;
         let timeInterval = 300;
         let whichParam = 1;
-        let numberOfParams = 3; //number of sensors you have
+        let numberOfParams = 4; //number of sensors you have
 
         //COLOR vars:
         let myHue = 0;
@@ -50,6 +52,8 @@
         //function preload() {
             //Futura = loadFont('Khand-Bold.ttf');
         //}
+
+        let buttonPressed = false;
 
         function setup(){
             createCanvas(800,800,WEBGL);
@@ -153,11 +157,18 @@
             currentFactor = millis()% timeInterval;
             if(currentFactor<prevFactor){ //passed an interval
                 if(whichParam ==1){
-                    loadJSON(data1URL,dataHandle,errorHanle);
+                    loadJSON(data1URL,dataHandle,errorHandle);
                 }
-                else{
-                    loadJSON(data2URL,dataHandle,errorHanle);
+                else if(whichParam ==2) {
+                    loadJSON(data2URL,dataHandle,errorHandle);
                 }
+                else if(whichParam ==3) {
+                    loadJSON(data3URL,dataHandle,errorHandle);
+                }
+                else {
+                    loadJSON(data4URL,dataHandle,errorHandle)
+                }
+     
                 whichParam++;
                 if(whichParam == (numberOfParams+1)) whichParam = 1;
             }
@@ -189,8 +200,9 @@
                 mySat = map(parseInt(JSONdata.result),0,4096,0,100);
 
             }
+            
         }
-        function errorHanle(Error){
+        function errorHandle(Error){
             console.log("Error has occured:"+Error);
         }
 
