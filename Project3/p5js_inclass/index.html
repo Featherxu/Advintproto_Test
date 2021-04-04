@@ -27,14 +27,14 @@
         let baseURL = "https://api.particle.io/v1/devices/430029001847393035313137/";
         let token = "?access_token=078a639410f7a8655f30a545d59fdb42676a245b";
     
-        let param1 = "pot1";
-        let param2 = "pot2";
+        //let param1 = "pot1";
+        let param2 = "pressure";
         let param3 = "motion";
-        let param4 = "button";
-        let data1URL = baseURL + param1 + token; //for potentiometer 1
+        //let param4 = "button";
+        //let data1URL = baseURL + param1 + token; //for potentiometer 1
         let data2URL = baseURL + param2 + token; //for potentiometer 2
         let data3URL = baseURL + param3 + token; //for motion sensor
-        let data4URL = baseURL + param4 + token; //for button sensor
+       // let data4URL = baseURL + param4 + token; //for button sensor
 
         let Futura;
         let angle = 0;
@@ -43,11 +43,14 @@
         let currentFactor, prevFactor;
         let timeInterval = 300;
         let whichParam = 1;
-        let numberOfParams = 4; //number of sensors you have
+        let numberOfParams = 2; //number of sensors you have
 
         //COLOR vars:
-        let myHue = 0;
-        let mySat = 100;
+        //let myHue = 0;
+        ///let mySat = 100;
+
+        let drawFood = false;
+        let drawPoop = false;
 
         //function preload() {
             //Futura = loadFont('Khand-Bold.ttf');
@@ -75,6 +78,7 @@
             g = createGraphics(950,500);
             g.fill(230);
             //g.background(5,85,245);
+            g.background(200, 100, 100);
             //g.textAlign(CENTER);
             //g.textFont(Futura);
             g.textSize(50);
@@ -148,26 +152,104 @@
             g.text('FOOD',x6,h);
 
 
+            p = createGraphics(950,500);
+            p.fill(230);
+            //g.background(5,85,245);
+            p.background(200, 100, 100);
+            //g.textAlign(CENTER);
+            //g.textFont(Futura);
+            p.textSize(50);
+            p.text('POOP',x1,100);
+            p.text('POOP',x2,100);
+            p.text('POOP',x4,100);
+            p.text('POOP',x3,100);
+            p.text('POOP',x5,100);
+            p.text('POOP',x6,100);
+
+            let i = 155;
+            p.text('POOP',x1,a);
+            p.text('POOP',x2,a);
+            p.text('POOP',x3,a);
+            p.text('POOP',x4,a);
+            p.text('POOP',x5,a);
+            p.text('POOP',x6,a);
+
+
+
+            let j = 205;
+            p.text('POOP',x1,b);
+            p.text('POOP',x2,b);
+            p.text('POOP',x3,b);
+            p.text('POOP',x4,b);
+            p.text('POOP',x5,b);
+            p.text('POOP',x6,b);
+
+
+
+            let k = 255;
+            p.text('POOP',x1,c);
+            p.text('POOP',x2,c);
+            p.text('POOP',x3,c);
+            p.text('POOP',x4,c);
+            p.text('POOP',x5,c);
+            p.text('POOP',x6,c);
+
+
+            let l = 305;
+            p.text('POOP',x1,d);
+            p.text('POOP',x2,d);
+            p.text('POOP',x3,d);
+            p.text('POOP',x4,d);
+            p.text('POOP',x5,d);
+            p.text('POOP',x6,d);
+
+            let m = 355;
+            p.text('POOP',x1,e);
+            p.text('POOP',x2,e);
+            p.text('POOP',x3,e);
+            p.text('POOP',x4,e);
+            p.text('POOP',x5,e);
+            p.text('POOP',x6,e);
+
+            let n = 405;
+            p.text('POOP',x1,f);
+            p.text('POOP',x2,f);
+            p.text('POOP',x3,f);
+            p.text('POOP',x4,f);
+            p.text('POOP',x5,f);
+            p.text('POOP',x6,f);
+
+
+            let o = 455;
+            p.text('POOP',x1,h);
+            p.text('POOP',x2,h);
+            p.text('POOP',x3,h);
+            p.text('POOP',x4,h);
+            p.text('POOP',x5,h);
+            p.text('POOP',x6,h);
+
+
         }
 
         function draw(){
-            background(myHue, mySat,100);
-            
+            background(270, 80, 100);
+	       
+	        
 
             currentFactor = millis()% timeInterval;
             if(currentFactor<prevFactor){ //passed an interval
                 if(whichParam ==1){
-                    loadJSON(data1URL,dataHandle,errorHandle);
-                }
-                else if(whichParam ==2) {
                     loadJSON(data2URL,dataHandle,errorHandle);
                 }
-                else if(whichParam ==3) {
+                else if(whichParam ==2) {
                     loadJSON(data3URL,dataHandle,errorHandle);
                 }
-                else {
-                    loadJSON(data4URL,dataHandle,errorHandle)
-                }
+                //else if(whichParam ==3) {
+                //    loadJSON(data3URL,dataHandle,errorHandle);
+                //}
+                //else {
+                //    loadJSON(data4URL,dataHandle,errorHandle)
+               // }
      
                 whichParam++;
                 if(whichParam == (numberOfParams+1)) whichParam = 1;
@@ -183,7 +265,7 @@
             rotateY(0);
             //  rotateX(angle);
 
-            texture(g);
+            //texture(g);
               //fill(100,20);
             noStroke();
             cylinder(180,400,500,100);
@@ -193,12 +275,22 @@
 
         function dataHandle(JSONdata){
             console.log(JSONdata);
-            if(JSONdata.name ==="pot1"){
-                myHue = map(parseInt(JSONdata.result),0,4096,0,360);
-            }
-            else if(JSONdata.name ==="pot2"){
-                mySat = map(parseInt(JSONdata.result),0,4096,0,100);
+            if(JSONdata.name ==="motion"){
+                //myHue = map(parseInt(JSONdata.result),0,4096,0,360);
 
+                if(parseInt(JSONdata.result) == 1) {
+                    drawPoop = true;
+                    texture(p);
+                }
+
+
+            }
+            else if(JSONdata.name ==="pressure"){
+                //mySat = map(parseInt(JSONdata.result),4096,0,0,100);
+                if(parseInt(JSONdata.result) < 3000) {
+                    drawFood = true;
+                    texture(g);
+                }
             }
             
         }
