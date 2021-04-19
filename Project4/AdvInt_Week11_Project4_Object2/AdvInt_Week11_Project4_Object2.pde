@@ -1,21 +1,25 @@
-//import processing.serial.*;
+import processing.serial.*;
 
-//Serial myConnection;
+Serial myConnection;
 
-
-float pentio = -1;
-float groundLevel;
+float potentio = 1;
+//float pentio = -1;
 float button = 0;
 
+float groundLevel;
+//float rabbitX;
+float carrotX;
+//float rabbitY;
+float carrotY;
+float rainX;
+float rainY;
 
-//float carrotX = 350;                       //carrot
-//float carrotY = 370;                       //carrot
 
-//float rainX = 350;                        //initial rain position
-//float rainY = 0;
+//float up;                              //these four line from demo
+//float down;
+float gravity = 0.5;
+float ground = 400;
 
-//float rabbitX = 0;
-//float rabbitY = 370;                      //initial rabbit position
 
 float backgroundAX = 0;
 float backgroundAY = 0;                    //initial backgroundA position
@@ -23,7 +27,7 @@ float backgroundAY = 0;                    //initial backgroundA position
 float backgroundBX = 0;                    //initial backgroundA position
 float backgroundBY = 0;  
 
-//boolean moveDown = true;                  //rain starts dropping down
+boolean moveDown = true;                  //rain starts dropping down
 //boolean rabbitDirection = true;
 boolean backgroundDirection = true;
 
@@ -32,13 +36,12 @@ boolean backgroundDirection = true;
 int countA = 3;                            //count for life
 PFont font;                               //font used for count
 
-PImage rabbit, rabbitRev;
 PImage rain;
 PImage carrot;
 PImage backgroundA;
 PImage backgroundB;
 
-ArrayList<Rabbit> rabbits;
+Rabbit myRabbit;
 
 ArrayList<Rain> rains;
 
@@ -51,17 +54,15 @@ void setup() {
 
 
 
-  rabbit = loadImage ("rabbit.png");      //Rabbit Image 
-  rabbitRev = loadImage("rabbitRev.png"); //RabbitRev Image
+
   rain = loadImage ("rain.png");          //Rain Image
   carrot = loadImage ("carrot.png");      //Carrot Image
   backgroundA = loadImage ("backgroundA.png");
   backgroundB = loadImage("backgroundB.png");
-  
-  rabbits = new ArrayList<Rabbit>();
-  rabbits.add(new Rabbit());
-  
-  
+
+ myRabbit = new Rabbit(370,0);
+
+
   rains = new ArrayList<Rain>();
   rains.add(new Rain());
 
@@ -69,71 +70,70 @@ void setup() {
   carrots = new ArrayList<Carrot>();
   carrots.add(new Carrot());
 
+
+  printArray(Serial.list());
+  myConnection = new Serial(this, Serial.list()[3], 9600);
+  myConnection.bufferUntil('\n');
 }
 
 void draw() {
   background(#4A53E5);                      //refresh background
-  image(backgroundA,backgroundAX, backgroundAY, 600, 600);
-  image(backgroundB,backgroundBX, backgroundBY, 600, 600);
-  
+  image(backgroundA, backgroundAX, backgroundAY, 600, 600);
+  image(backgroundB, backgroundBX, backgroundBY, 600, 600);
+
   textSize(20);
   text("Life:", 50, 50);
   text(countA, 100, 50);
 
-  for (Rabbit r : rabbits) {
-    r.display();
-    r.rabbitX= mouseX;
-  }
-  
-  
- for (Rain a : rains) {
+
+    myRabbit.updateRabbit(370, 1);
+    //myRabbit.buttonPressed();
+    //myRabbit.buttonReleased();
+    myRabbit.display();
+    //r.rabbitX= mouseX;
+
+
+
+  for (Rain a : rains) {
     a.display();
-    a.drop = true;
+    a.drop();
+    a.reposition(myRabbit.position.x, myRabbit.position.y);
   }
-  
-  
- for (Carrot c : carrots) {
+
+
+  for (Carrot c : carrots) {
     c.display();
-    c.carrotY= 410;
+    c.reposition(myRabbit.position.x, myRabbit.position.y);
+    //c.carrotY= 410;
   }
-  
+
 
 
   //image (rain, rainX, rainY, 40, 50);           //Raindrop Image
   //image(carrot, carrotX, carrotY, 40, 55);        //Carrot Image
-  
-  
 
-  //if (moveDown == true) {
-  //  rainY = rainY +7;
-  //}
 
-  //if (rainY <= 650) {
-  //  moveDown = true;
-  //}
 
-  //if (rainY > 650) {                //let the rain drops
-  //  rainY = 0;
-  //  rainX = random (30, 670);
-  //  moveDown = true;
-  //}
-  
-  
-  
+
+
+
+
   //if(rabbitX <carrotX+25 && rabbitX > carrotX-25 && rabbitY <carrotY+25 && rabbitY>carrotY-25){
   //  carrotX =  random (50,550);
   //  carrotY =  random (200,370);
   //  countA= countA+1;
   //}
-  
 
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
   //if (rabbitX > rabbitX-1) {                 //rabbit follows carrot
- 
+
   //  rabbitDirection = true;
   //}
 
@@ -141,63 +141,58 @@ void draw() {
 
   //  rabbitDirection = false;
   //}
-  
-  if (backgroundAX <=0){
+
+  if (backgroundAX <=0) {
     backgroundAX = backgroundAX - 1;      //backgroundA move right
     backgroundBX = backgroundAX + 600;
     backgroundDirection = true;
   }
-  
-  if (backgroundBX <=0){
+
+  if (backgroundBX <=0) {
     backgroundBX = backgroundBX - 1;      //backgroundA move right
     backgroundAX = backgroundBX + 600;
     backgroundDirection = true;
   }
 
- 
-  
+
+
   //if(rabbitDirection == true){
   //  image(rabbit, rabbitX, rabbitY, 100, 100);         //Rabbit Image
   //}
   //else{
   //  image(rabbitRev, rabbitX, rabbitY, 100, 100);       //RabbitRev Image
   //}
-  
-      
 
- 
+
+
+
   //if (rainX < rabbitX + 50 && rainX > rabbitX - 50 && rainY <rainY + 50 && rainY> rabbitY - 50){
   //  rainY = 0;
   //  rainX = random (30, 670);
   //  moveDown = true;
   //  countA= countA-1;
   //}
-  
-  //if(countA < 0){
-  //  exit();
-    
 
-  //}
+
+  if (countA < 0) {
+    exit();
   }
+}
 
-//void serialEvent(Serial conn){
-//  String fromSerial= conn.readString();
-  
-//  if(fromSerial !=null){
-//    fromSerial = trim(fromSerial);
-    
-//    String[] data = split(fromSerial, ',');
-//    printArray(data);
-    
-//    if(data.length == 2){
-      
-//      button = float(data[0]);
-//      rabbitX = float(data[1]);
-//      rabbitX = map(rabbitX, 0, 4096, 0, 500);
-    
+void serialEvent(Serial conn) {
+  String fromSerial= conn.readString();
 
-//  }
-// } 
+  if (fromSerial !=null) {
+    fromSerial = trim(fromSerial);
 
-  
- 
+    String[] data = split(fromSerial, ',');
+    printArray(data);
+
+    if (data.length == 2) {
+
+      button = float(data[0]);
+      potentio = float(data[1]);
+      //rabbitX = map(rabbitX, 0, 4096, 0, 500);
+    }
+  }
+}
